@@ -1,6 +1,7 @@
 import deepspeech
 import pvporcupine
 import pyaudio
+from conversation_logger import log_conversation
 
 def detect_wake_word(keyword_path):
     porcupine = pvporcupine.create(
@@ -24,14 +25,17 @@ def detect_wake_word(keyword_path):
 
         if porcupine.process(pcm) >= 0:
             print("Wake word detected!")
+            log_conversation("System", "Wake word detected!")
             text = ds.stt(pcm)
             if text:
+                log_conversation("User", text)
                 return text
 
 if __name__ == '__main__':
     wake_word_model_path = 'path/to/your/wake/word/model.ppn'
     detected_text = detect_wake_word(wake_word_model_path)
     print(f"Detected Text: {detected_text}")
+    log_conversation("Assistant", detected_text)
 
 
 
